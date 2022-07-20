@@ -63,12 +63,14 @@ describe('Verify all the functions and interactions of the page Pokedex', () => 
     expect(pokemonName && pokemonImg).toBeInTheDocument();
   });
 
-  // it('Verify if one pokemon appears at a time', () => {
-  //   renderWithRouter(<App />);
+  it('Verify if one pokemon appears at a time', () => {
+    renderWithRouter(<App />);
 
-  //   const imgPokemonCount = screen.getByRole('img', { name: /pikachu sprite/i });
-  //   expect(imgPokemonCount).toBeCalledTimes(1);
-  // });
+    const imgPokemonCount = screen.getAllByRole('img', { name: /pikachu sprite/i });
+    const numberImg = 1;
+
+    expect(imgPokemonCount).toHaveLength(numberImg);
+  });
 
   it('verify if the Pokédex have all filter buttons', () => {
     renderWithRouter(<App />);
@@ -94,6 +96,12 @@ describe('Verify all the functions and interactions of the page Pokedex', () => 
       && normalBtnFilter
       && dragonBtnFilter,
     ).toBeInTheDocument();
+
+    const typePokemonsNumber = screen.getAllByTestId('pokemon-type-button');
+
+    const numberTypes = 7;
+
+    expect(typePokemonsNumber).toHaveLength(numberTypes);
   });
 
   it('Verify if just one type of pokemons apears if you push a filter button', () => {
@@ -102,16 +110,25 @@ describe('Verify all the functions and interactions of the page Pokedex', () => 
     const psychicBtnFilter = screen.getByRole('button', { name: /psychic/i });
     userEvent.click(psychicBtnFilter);
 
-    const verifyPokeType = screen.getByTestId('pokemon-type');
+    const verifyPokeName = screen.getByText(/Alakazam/i);
 
-    expect(verifyPokeType).toBeInTheDocument();
+    expect(verifyPokeName).toBeInTheDocument();
 
     const nextPokemonBtn = screen
       .getByTestId('next-pokemon');
     userEvent.click(nextPokemonBtn);
 
-    const verifyNextPokeType = screen.getByTestId('pokemon-type');
+    const verifyNextPokeName = screen.getByText(/mew/i);
 
-    expect(verifyNextPokeType).toBeInTheDocument();
+    expect(verifyNextPokeName).toBeInTheDocument();
+  });
+
+  it('Verify if exist a button to reset the filters', () => {
+    renderWithRouter(<App />);
+
+    const resetBtnFilter = screen.getByRole('button', { name: 'All' });
+    expect(resetBtnFilter).toHaveTextContent('All');
+    userEvent.click(resetBtnFilter);
+    expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
   });
 });
