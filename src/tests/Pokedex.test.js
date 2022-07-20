@@ -57,24 +57,61 @@ describe('Verify all the functions and interactions of the page Pokedex', () => 
     userEvent.click(nextPokemonBtn);
 
     const pokemonName = screen.getByText(/charmander/i);
-    const pokemonType = screen.getByTestId('pokemon-type');
+    // const pokemonType = screen.getByTestId('pokemon-type');
     const pokemonImg = screen.getByAltText(/charmander sprite/i);
 
-    expect(pokemonName && pokemonType && pokemonImg).toBeInTheDocument();
+    expect(pokemonName && pokemonImg).toBeInTheDocument();
   });
 
   // it('Verify if one pokemon appears at a time', () => {
-  //   renderWithRouter(<Pokedex pokemonsMock={ pokemonsMock } />);
-
-  //   const imgPokemonCount = screen.getByTestId('pokemon-name');
-  //   expect(imgPokemonCount.length).toBe(1);
-  // });
-
-  // it('', () => {
   //   renderWithRouter(<App />);
 
-  //   const pokedexH2 = screen
-  //     .getByRole('heading', { name: /Encountered pokémons/i });
-  //   expect(pokedexH2).toBeInTheDocument();
+  //   const imgPokemonCount = screen.getByRole('img', { name: /pikachu sprite/i });
+  //   expect(imgPokemonCount).toBeCalledTimes(1);
   // });
+
+  it('verify if the Pokédex have all filter buttons', () => {
+    renderWithRouter(<App />);
+
+    const allPokemonBtn = screen
+      .getByRole('button', { name: /all/i });
+    expect(allPokemonBtn).toBeVisible();
+
+    const electricBtnFilter = screen.getByRole('button', { name: /electric/i });
+    const fireBtnFilter = screen.getByRole('button', { name: /fire/i });
+    const bugBtnFilter = screen.getByRole('button', { name: /bug/i });
+    const poisonBtnFilter = screen.getByRole('button', { name: /poison/i });
+    const psychicBtnFilter = screen.getByRole('button', { name: /psychic/i });
+    const normalBtnFilter = screen.getByRole('button', { name: /normal/i });
+    const dragonBtnFilter = screen.getByRole('button', { name: /dragon/i });
+
+    expect(
+      electricBtnFilter
+      && fireBtnFilter
+      && bugBtnFilter
+      && poisonBtnFilter
+      && psychicBtnFilter
+      && normalBtnFilter
+      && dragonBtnFilter,
+    ).toBeInTheDocument();
+  });
+
+  it('Verify if just one type of pokemons apears if you push a filter button', () => {
+    renderWithRouter(<App />);
+
+    const psychicBtnFilter = screen.getByRole('button', { name: /psychic/i });
+    userEvent.click(psychicBtnFilter);
+
+    const verifyPokeType = screen.getByTestId('pokemon-type');
+
+    expect(verifyPokeType).toBeInTheDocument();
+
+    const nextPokemonBtn = screen
+      .getByTestId('next-pokemon');
+    userEvent.click(nextPokemonBtn);
+
+    const verifyNextPokeType = screen.getByTestId('pokemon-type');
+
+    expect(verifyNextPokeType).toBeInTheDocument();
+  });
 });
